@@ -14,6 +14,8 @@ struct CustomBackground: View {
         CGPoint(x: 0.3, y: 0.4),
         CGPoint(x: 0.9, y: 0.3)
     ]
+    @State private var stringHeights: [CGFloat] = [0, 0, 0]
+
     
     @State private var animationComplete = false
     @State private var showFence = false
@@ -61,31 +63,44 @@ struct CustomBackground: View {
                 // Falling emojis with strings
                 ForEach(0..<emojis.count, id: \.self) { index in
                     VStack(spacing: 0) {
-                        // The string
+                        // The string grows down
                         Image("string")
                             .resizable()
-                            .frame(width: 20, height: animationComplete ?
-                                   geometry.size.height * emojiPositions[index].y : 0)
-                        
-                        // The emoji
+                            .frame(
+                                width: 20,
+                                height: stringHeights[index]
+                            )
+
+                        // The emoji image
                         Image(emojis[index])
                             .resizable()
                             .frame(width: 100, height: 100)
                     }
                     .position(
                         x: geometry.size.width * emojiPositions[index].x,
-                        y: animationComplete ?
-                            geometry.size.height * emojiPositions[index].y / 2 : 0
+                        y: geometry.size.height * emojiPositions[index].y / 2
                     )
+                    .offset(y: animationComplete ? 0 : -geometry.size.height)
+                    .animation(.easeOut(duration: 1.5).delay(0.1 * Double(index)), value: animationComplete)
                 }
+
             }
             .onAppear {
-                // Animate emojis drop
+                // Drop the entire emoji + string
                 withAnimation(.easeOut(duration: 2.0)) {
                     animationComplete = true
                 }
                 
-                // Animate elements with spring + staggered delays
+                // Animate string height growth
+                for index in 0..<stringHeights.count {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 * Double(index)) {
+                        withAnimation(.easeOut(duration: 1.5)) {
+                            stringHeights[index] = geometry.size.height * emojiPositions[index].y
+                        }
+                    }
+                }
+
+                // Animate other background elements
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     withAnimation(.spring(response: 0.5, dampingFraction: 0.7, blendDuration: 0.2)) {
                         showFence = true
@@ -102,6 +117,7 @@ struct CustomBackground: View {
                     }
                 }
             }
+
         }
     }
 }

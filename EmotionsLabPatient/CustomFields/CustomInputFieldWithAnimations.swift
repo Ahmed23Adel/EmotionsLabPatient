@@ -4,45 +4,48 @@
 //
 //  Created by ahmed on 16/04/2025.
 //
-
 import SwiftUI
 
 struct CustomInputFieldWithAnimations<Content: View>: View {
     var placeholder: String
     var text: Binding<String>
-    @State var animationComplete = false
+    @State private var animate = false
     let content: () -> Content
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // String that drops from the top
+                // Falling string
                 Image("string")
                     .resizable()
-                    .frame(width: 30,
-                           height: animationComplete ? geometry.size.height * 0.6 : 0)
+                    .frame(width: 30, height: geometry.size.height * 0.6)
                     .position(
-                        x: geometry.size.width * 0.5,
-                        y: animationComplete ? geometry.size.height * 0.25 : 0
+                        x: geometry.size.width / 2,
+                        y: animate
+                            ? geometry.size.height * 0.25
+                            : -geometry.size.height * 0.3 // off-screen initially
                     )
-                
-                // Custom input field exactly in the middle of screen
-                VStack{
-                    
-                    
+                    .animation(.easeOut(duration: 1), value: animate)
+
+                // Falling input field
+                VStack {
                     CustomInputField(placeholder: placeholder, text: text)
                     content()
-                    
                 }
+                .frame(width: geometry.size.width * 0.8)
                 .position(
-                    x: geometry.size.width * 0.5,
-                    y: animationComplete ? geometry.size.height * 0.5 : 0
+                    x: geometry.size.width / 2,
+                    y: animate
+                        ? geometry.size.height * 0.5
+                        : -geometry.size.height // off-screen initially
                 )
-                
+                .animation(.easeOut(duration: 1.2), value: animate)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear {
-                withAnimation(.easeOut(duration: 1)) {
-                    animationComplete = true
+                // Trigger the fall after a short delay if desired
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    animate = true
                 }
             }
         }
