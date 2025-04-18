@@ -39,25 +39,28 @@ class ContentViewModel: ObservableObject{
                     patient.loadPatientData()
                 } else{
                     print("a5")
-//                    let (isSuccess, appleId) = patient.tryReadAppleId()
-//                    if isSuccess {
-//                        print("a6")
-//                        if let appleId = appleId{
-//                            print("a7")
-//                            if await patient.authAccess.loginUsingAppleAuth(appleId: appleId){
-//                                print("a8")
-//                                userNeedsToSignUp = false
-//                                patient.loadPatientData()
-//                            } else{
-//                                print("a9")
-//                                userNeedsToSignUp = true
-//                            }
-//                            
-//                        }
-//                    } else{
-//                        print("a11")
-//                        userNeedsToSignUp = true
-//                    }
+                    let (isSuccess, username) = patient.tryReadUsername()
+                    if isSuccess {
+                        print("a6")
+                        if let username = username{
+                            print("a7")
+                            
+                            do{
+                                print("a8")
+                                try await patient.loginUsingUsername(username: username)
+                                userNeedsToSignUp = false
+                                patient.loadPatientData()
+                            } catch{
+                                print("a9")
+                                userNeedsToSignUp = true
+                            }
+                            
+                            
+                        }
+                    } else{
+                        print("a11")
+                        userNeedsToSignUp = true
+                    }
                     
                 }
             }

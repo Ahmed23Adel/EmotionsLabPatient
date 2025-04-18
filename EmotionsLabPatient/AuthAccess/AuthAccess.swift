@@ -144,25 +144,6 @@ class AuthAccess: ObservableObject{
     
     
     
-    
-    
-    func loginUsingAppleAuth(appleId: String) async -> Bool{
-        do {
-            let data = try await apiCaller.callApiNoToken(endpoint: "auth/apple", method: .post, params: [
-                "apple_id": appleId
-            ])
-            let decoder = JSONDecoder()
-            let response = try decoder.decode(LoginUsingAppleResponse.self, from: data)
-            accessTokenValue = response.access_token
-            refreshTokenValue = response.refresh_token
-            setAccessAndRefreshReadValid()
-            saveAccessAndRefreshValues()
-            print("saved")
-            return true
-        } catch {
-            return false
-        }
-    }
 
     private func saveAccessAndRefreshValues(){
         if let accessTokenData = accessTokenValue.data(using: .utf8),
@@ -180,4 +161,9 @@ class AuthAccess: ObservableObject{
         isRefreshTokenValid = true
     }
     
+    func setAccessAndRefreshAndSave(accessToken: String, refreshToken: String){
+        self.accessTokenValue = accessToken
+        self.refreshTokenValue = refreshToken
+        saveAccessAndRefreshValues()
+    }
 }
