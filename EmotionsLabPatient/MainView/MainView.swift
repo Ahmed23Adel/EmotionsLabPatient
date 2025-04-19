@@ -17,31 +17,32 @@ struct MainView: View {
                 CustomBackground()
                 VStack{
                     HStack{
-                        
-                        if viewModel.isActiveTimePeriod{
+                        if viewModel.isTimePeriodLoading{
+                            ProgressView("")
+                        } else{
                             Text("You have")
                                 .font(.title)
                                 .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
-                            Text("active")
-                                .font(.title)
-                                .foregroundColor(Color.brown)
                             
-                            Text(" period")
-                                .font(.title)
-                                .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
-                        } else{
-                            Text("You have ")
-                                .font(.title)
-                                .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
-                            
-                            Text("no active")
-                                .font(.title)
-                                .foregroundColor(Color.red)
+                            if viewModel.isActiveTimePeriod{
+                                Text("active")
+                                    .font(.title)
+                                    .foregroundColor(Color.brown)
+                            } else{
+                                Text("no active")
+                                    .font(.title)
+                                    .foregroundColor(Color.red)
+                            }
+                           
                             
                             Text(" time period")
                                 .font(.title)
                                 .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
+                            
+                            
                         }
+                        
+                        
                         
                         Image("alex")
                             .resizable()
@@ -62,8 +63,19 @@ struct MainView: View {
                     HStack{
                         Text("You have ")
                             .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
-                        CounterView(finalValue: viewModel.numTodaySessions)
-                        Text(" sessions")
+                        if viewModel.isLoadingSessions{
+                            ProgressView("")
+                        } else {
+                            if viewModel.isActiveSessionToday{
+                                CounterView(finalValue: viewModel.numTodaySessions)
+                            } else{
+                                Text("No")
+                                    .foregroundColor(Color.red)
+                            }
+                        }
+                        
+                        
+                        Text(" sessions to do")
                             .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
                     }
                     
