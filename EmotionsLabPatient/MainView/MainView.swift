@@ -86,7 +86,7 @@ struct MainView: View {
                                 VStack(spacing: 10) {
                                     ForEach(viewModel.todayActiveSessions, id: \.id) { session in
                                         if let imageSession = session as? ImagesSession {
-                                            NavigationLink(destination: ImagesSessionView(currentSession: imageSession)) {
+                                            NavigationLink(destination: ImagesSessionVideosView(currentSession: imageSession)) {
                                                 HStack(spacing: 4) {
                                                     Text("Scheduled")
                                                         .font(.headline)
@@ -96,7 +96,7 @@ struct MainView: View {
                                                         .font(.headline)
                                                         .foregroundColor(Color.mint)
                                                 }
-                                                .padding(10)
+                                                .padding(15)
                                                 .background(Color.white.opacity(0.8))
                                                 .cornerRadius(25)
                                             }
