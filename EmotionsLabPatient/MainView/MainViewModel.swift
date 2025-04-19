@@ -17,6 +17,7 @@ class MainViewModel: ObservableObject{
     @Published var isActiveSessionToday = false
     @Published var numScheduleSessionsToday = 0
     @Published var isLoadingSessions = true
+    @Published var todayActiveSessions: [any Session] = []
     
     init(){
         Task{
@@ -87,8 +88,6 @@ class MainViewModel: ObservableObject{
             let response = try decoder.decode(SessionsTodayResponse.self, from: data)
             showResultsSessionToday(response: response)
         } catch {
-            print("Decoding error: \(error)")
-            print("Detailed error: \(error.localizedDescription)")
             throw SessionError.noActiveSessionToday
         }
     }
@@ -98,10 +97,20 @@ class MainViewModel: ObservableObject{
         for session in response.sessions {
             if session.status == "scheduled" {
                 numTodaySessionsTmp += 1
+                timePeriod.addSession(session: SessionFactory.generateSession(
+                    sessionId: session.sessionID,
+                    gameTypeName: session.gameTypeName,
+                    status: .scheduled,
+                    
+                ))
             }
         }
         numTodaySessions = numTodaySessionsTmp
         isActiveSessionToday = true
         isLoadingSessions = false
+        loadTodaySessionLocal()
+    }
+    private func loadTodaySessionLocal(){
+        todayActiveSessions = timePeriod.todayActiveSessions
     }
 }

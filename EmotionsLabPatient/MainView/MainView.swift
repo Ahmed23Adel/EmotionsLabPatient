@@ -79,6 +79,42 @@ struct MainView: View {
                             .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
                     }
                     
+                    // Replace your current List with this
+                    VStack {
+                        if !viewModel.todayActiveSessions.isEmpty {
+                            ScrollView {
+                                VStack(spacing: 10) {
+                                    ForEach(viewModel.todayActiveSessions, id: \.id) { session in
+                                        if let imageSession = session as? ImagesSession {
+                                            NavigationLink(destination: ImagesSessionView(currentSession: imageSession)) {
+                                                HStack(spacing: 4) {
+                                                    Text("Scheduled")
+                                                        .font(.headline)
+                                                        .foregroundColor(Color.green)
+                                                    
+                                                    Text("Click to start")
+                                                        .font(.headline)
+                                                        .foregroundColor(Color.mint)
+                                                }
+                                                .padding(10)
+                                                .background(Color.white.opacity(0.8))
+                                                .cornerRadius(25)
+                                            }
+                                        }
+                                    }
+                                }
+                                .frame(maxWidth: 230) // Control the width here
+                            }
+                            .frame(height: min(CGFloat(viewModel.todayActiveSessions.count) * 60, 180))
+                        } else {
+                            Text("No sessions scheduled for today")
+                                .foregroundColor(.secondary)
+                                .padding()
+                        }
+                    }
+                    .frame(maxWidth: .infinity) // This centers the content
+                    
+                    
                 }
                 .padding(50)
                 .background(.ultraThinMaterial)

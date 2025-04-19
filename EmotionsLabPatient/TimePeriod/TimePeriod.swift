@@ -11,6 +11,7 @@ import Foundation
 class TimePeriod{
     private(set) var periodId = ""
     private let apiCaller = ApiCaller()
+    private(set) var todayActiveSessions: [Session] = []
     
     func loadActiveTimePeriod() async throws{
         
@@ -19,7 +20,6 @@ class TimePeriod{
                 endpoint: "my/active-time-period",
                 method: .get,
                 token: Patient.shared.authAccess.accessTokenValue)
-            print("s1")
             parseTimePeriod(data: data)
             
         } catch{
@@ -71,6 +71,14 @@ class TimePeriod{
         }
     }
 
+    
+    func addSession(session: any Session){
+        todayActiveSessions.append(session)
+    }
+    
+    func extractSessionsAsList(){
+        
+    }
     
     
 }
