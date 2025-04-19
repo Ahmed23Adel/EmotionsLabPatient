@@ -112,13 +112,15 @@ struct MainView: View {
                                 .padding()
                         }
                     }
-                    .frame(maxWidth: .infinity) // This centers the content
+                    .frame(maxWidth: 230) // This centers the content
                     
                     
                 }
                 .padding(50)
-                .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 50))
+                .background(
+                    RoundedRectangle(cornerRadius: 50)
+                        .fill(.ultraThinMaterial)
+                )
                 
                 
             }
