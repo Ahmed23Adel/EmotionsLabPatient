@@ -9,10 +9,26 @@ import SwiftUI
 
 struct ImagesSessionGameView: View {
     var currentSession: ImagesSession
+    @StateObject var viewModel = ImagesSessionGameViewModel()
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            CustomBackground()
+                .blur(radius: 5)
+            VStack{
+                
+                MultipleImages(emotionsImages: $viewModel.emotionsImages)
+                MultiplieImageNames(emotionNumbersShown: $viewModel.emotionNumbersShown)
+            }
+            
+            
+        }
+        .onAppear{
+            viewModel.setCurrentSession(currentSession)
+        }
     }
 }
+
+
 
 #Preview {
     ImagesSessionGameView(currentSession: ImagesSession(sessionId: UUID(), status: .scheduled))
