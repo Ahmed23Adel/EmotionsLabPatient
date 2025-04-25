@@ -16,8 +16,8 @@ struct ImagesSessionGameView: View {
                 .blur(radius: 5)
             VStack{
                 
-                MultipleImages(emotionsImages: $viewModel.emotionsImages)
-                MultiplieImageNames(emotionNumbersShown: $viewModel.emotionNumbersShown)
+                MultipleImagesView(emotionsImages: $viewModel.emotionsImages, selectCurrentImageParentFunc: viewModel.imageSelect)
+                MultiplieImageNamesView(emotionNames: $viewModel.emotionNames, selectCurrentNameParentFunc: viewModel.nameSelect)
             }
             
             

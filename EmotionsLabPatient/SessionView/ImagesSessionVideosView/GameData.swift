@@ -7,16 +7,11 @@
 
 import Foundation
 
-struct ImageData: Identifiable {
-    var id: String { imageName }  // Ensure unique ID based on imageName
-    var imageName: String
-    var emotionName: String
-    var isSelected: Bool
-}
 
 class GameData{
-    let emotionNames = ["disgusted", "happy", "feared", "surprised"]
-    var emotionsImages: [String: [ImageData]] = [:]
+    let basicEmotionNames = ["disgusted", "happy", "feared", "surprised"]
+    var emotionsImages: [String: [SingleImage]] = [:]
+    var emotionNames: [String: [SingleImageName]] = [:]
     var emotionNumbersShown: [String: Int] = [:]
     let numImagesPerEmotion = 3
     let maxNumberOfShownImages = 12
@@ -26,16 +21,68 @@ class GameData{
     }
     
     private func generateEmotionsImages(){
-        for emotionName in emotionNames {
+        for emotionName in basicEmotionNames {
             let number1 = Int.random(in: 1...10)
             let number2 = Int.random(in: 1...10)
             let number3 = Int.random(in: 1...10)
             emotionsImages[emotionName] = [
-                ImageData(imageName: emotionName + String(number1), emotionName: emotionName, isSelected: false),
-                ImageData(imageName: emotionName + String(number2), emotionName: emotionName, isSelected: false),
-                ImageData(imageName: emotionName + String(number3), emotionName: emotionName, isSelected: false),
+                SingleImage(imageName: emotionName + String(number1), emotionName: emotionName),
+                SingleImage(imageName: emotionName + String(number2), emotionName: emotionName),
+                SingleImage(imageName: emotionName + String(number3), emotionName: emotionName),
+            ]
+            emotionNames[emotionName] = [
+                SingleImageName(emotionName: emotionName),
+                SingleImageName(emotionName: emotionName),
+                SingleImageName(emotionName: emotionName)
             ]
             emotionNumbersShown[emotionName] = numImagesPerEmotion
+            
+        }
+    }
+    
+    
+    func disableSelectionFromOtherImagesExcept(_ image: SingleImage){
+        for tmpImgsInEmotion in emotionsImages.values{
+            for tmpImg in tmpImgsInEmotion{
+                if tmpImg != image {
+                    tmpImg.isAbleToSelect = false
+                }
+            }
+            
+        }
+    }
+    
+    func disableSelectionForAllImages(){
+        for tmpImgsInEmotion in emotionsImages.values{
+            for tmpImg in tmpImgsInEmotion{
+                tmpImg.isAbleToSelect = false
+            }
+            
+        }
+    }
+    func enableSelectionForAllImages(){
+        for tmpImgsInEmotion in emotionsImages.values{
+            for tmpImg in tmpImgsInEmotion{
+                tmpImg.isAbleToSelect = true
+            }
+            
+        }
+    }
+    
+    func enableSelectionForAllNames(){
+        for tmpNameInEmotion in emotionNames.values{
+            for tmpName in tmpNameInEmotion{
+                tmpName.isAbleToSelect = true
+            }
+            
+        }
+    }
+    
+    func disableSelectionForAllNames(){
+        for tmpNameInEmotion in emotionNames.values{
+            for tmpName in tmpNameInEmotion{
+                tmpName.isAbleToSelect = false
+            }
             
         }
     }
