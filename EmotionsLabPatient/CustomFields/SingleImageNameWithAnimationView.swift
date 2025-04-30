@@ -14,11 +14,13 @@ struct SingleImageNameWithAnimationView: View {
     var selectCurrentNameParentFunc: (SingleImageName) -> Void
     
     var body: some View {
-        SingleImageNameView(currentSingleName: currentSingleName, selectCurrentNameParentFunc: selectCurrentNameParentFunc)
-            .scaleEffect(scaleValue)
-            .offset(x: offsetX) // Apply horizontal offset for vibration
-            .onAppear {
-                withAnimation(.bouncy(duration: 1)) {
+        ZStack {
+            VibratingView(triggerVibration: $currentSingleName.isShowError, vibratingData: currentSingleName){
+                SingleImageNameView(currentSingleName: currentSingleName, selectCurrentNameParentFunc: selectCurrentNameParentFunc)
+                    .scaleEffect(scaleValue)
+            }
+            .onAppear{
+                withAnimation(.easeIn(duration: 0.5)) {
                     scaleValue = 1
                 }
             }
@@ -26,41 +28,6 @@ struct SingleImageNameWithAnimationView: View {
                 withAnimation(.easeOut(duration: 0.2)) {
                     scaleValue = 0
                 }
-            }
-            .onChange(of: currentSingleName.showError){
-                if currentSingleName.showError{
-                    vibrateView()
-                }
-            }
-          
-    }
-    
-    // Function to create vibration effect
-    private func vibrateView() {
-        // Series of quick animations to create vibration
-        let duration = 0.05
-        let numVibrations = 5
-        
-        for i in 0..<numVibrations {
-            // Move right
-            DispatchQueue.main.asyncAfter(deadline: .now() + duration * Double(i * 2)) {
-                withAnimation(.easeInOut(duration: duration)) {
-                    offsetX = 5
-                }
-            }
-            
-            // Move left
-            DispatchQueue.main.asyncAfter(deadline: .now() + duration * Double(i * 2 + 1)) {
-                withAnimation(.easeInOut(duration: duration)) {
-                    offsetX = -5
-                }
-            }
-        }
-        
-        // Reset position at the end
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration * Double(numVibrations * 2)) {
-            withAnimation(.easeInOut(duration: duration)) {
-                offsetX = 0
             }
         }
     }

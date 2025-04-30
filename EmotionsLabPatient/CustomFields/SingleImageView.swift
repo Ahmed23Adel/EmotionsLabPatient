@@ -38,24 +38,30 @@ struct SingleImageView: View {
                 
             
         }
+        .onChange(of: currentImage.isSelected){
+            print("onChange")
+            SelectOrUnselectView()
+        }
         .onTapGesture {
             if currentImage.isAbleToSelect{
-                if !currentImage.isSelected{
-                    withAnimation(.easeIn(duration: 0.1)){
-                        imgWidthAndHeight += 10
-                    }
-                } else{
-                    withAnimation(.easeIn(duration: 0.1)){
-                        imgWidthAndHeight -= 10
-                    }
-                }
                 currentImage.isSelected.toggle()
                 selectCurrentImageParentFunc(currentImage, currentImage.isSelected)
                 
+                
             }
-            
         }
-        
+    }
+    
+    private func SelectOrUnselectView(){
+        if currentImage.isSelected{
+            withAnimation(.easeIn(duration: 0.1)){
+                imgWidthAndHeight += 10
+            }
+        } else{
+            withAnimation(.easeIn(duration: 0.1)){
+                imgWidthAndHeight -= 10
+            }
+        }
         
     }
 }

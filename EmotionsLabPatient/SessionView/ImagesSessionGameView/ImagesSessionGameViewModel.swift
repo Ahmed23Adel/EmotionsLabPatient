@@ -84,14 +84,28 @@ class ImagesSessionGameViewModel: ObservableObject{
     
     
     func showSelectError(selectedName: SingleImageName, selectedImage: SingleImage){
-        selectedName.showError = true
-        selectedImage.showError = true
-        selectedName.isSelected = false
-        selectedImage.isSelected = false
+        vibrateViews(selectedName: selectedName, selectedImage: selectedImage)
+        resetSelection(selectedName: selectedName, selectedImage: selectedImage)
+    }
+    
+    func vibrateViews(selectedName: SingleImageName, selectedImage: SingleImage){
+        selectedName.isShowError = true
+        selectedImage.isShowError = true
+    }
+    
+    
+    func resetSelection(selectedName: SingleImageName, selectedImage: SingleImage){
+        unselectViews(selectedName: selectedName, selectedImage: selectedImage)
+        gameData.enableSelectionForAllNames()
+        gameData.enableSelectionForAllImages()
         self.selectedImage = nil
         self.selectedName = nil
         
     }
     
+    func unselectViews(selectedName: SingleImageName, selectedImage: SingleImage){
+        selectedName.isSelected = false
+        selectedImage.isSelected = false
+    }
     
 }

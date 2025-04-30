@@ -7,14 +7,13 @@
 
 import Foundation
 
-class SingleImage: Identifiable, ObservableObject, Equatable {
+class SingleImage: VibratingData, Identifiable, Equatable {
     var id = UUID()
     @Published var imageName: String
     @Published var emotionName: String
     @Published var isSelected: Bool = false
     @Published var isHide: Bool = false
     @Published var isAbleToSelect = true
-    @Published var showError = false
     
     init(imageName: String, emotionName: String) {
         self.imageName = imageName
