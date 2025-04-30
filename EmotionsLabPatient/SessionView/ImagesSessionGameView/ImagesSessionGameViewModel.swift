@@ -40,20 +40,38 @@ class ImagesSessionGameViewModel: ObservableObject{
         if let selectedName = selectedName, let selectedImage = selectedImage{
             if validateSelection(img: selectedImage, name: selectedName){
                 // user selected both image and name but they are correct
-                hideImgAndName(selectedName: selectedName, selectedImage: selectedImage)
+                resetSelectionOnCorrectMatch(
+                    selectedName: selectedName,
+                    selectedImage: selectedImage)
             } else {
                 // user selected both image and name but they are incorrect
                 showSelectError(selectedName: selectedName, selectedImage: selectedImage)
             }
-        } else if let _ = selectedImage{
-            // user selected only image
+        } else {
+            storeSelectedImageOrName(selectedName: selectedName, selectedImage: selectedImage)
+        }
+    }
+    
+    func resetSelectionOnCorrectMatch(selectedName: SingleImageName, selectedImage: SingleImage){
+        hideImgAndName(selectedName: selectedName, selectedImage: selectedImage)
+        gameData.enableSelectionForAllNames()
+        gameData.enableSelectionForAllImages()
+        self.selectedImage = nil
+        self.selectedName = nil
+    }
+    func storeSelectedImageOrName(selectedName: SingleImageName?, selectedImage: SingleImage?){
+        if let selectedName = selectedImage {
+            selectedName.isSelected = true
             gameData.enableSelectionForAllNames()
             gameData.disableSelectionForAllImages()
-        } else if let _ = selectedName {
-            // user selected only name
-            gameData.enableSelectionForAllImages()
-            gameData.disableSelectionForAllNames()
         }
+        if let selectedImage = selectedImage {
+            selectedImage.isSelected = true
+            gameData.enableSelectionForAllNames()
+            gameData.disableSelectionForAllImages()
+        }
+        
+        
     }
     
     func hideImgAndName(selectedName: SingleImageName, selectedImage: SingleImage){
@@ -66,8 +84,13 @@ class ImagesSessionGameViewModel: ObservableObject{
     
     
     func showSelectError(selectedName: SingleImageName, selectedImage: SingleImage){
+        selectedName.showError = true
+        selectedImage.showError = true
         selectedName.isSelected = false
         selectedImage.isSelected = false
+        self.selectedImage = nil
+        self.selectedName = nil
+        
     }
     
     

@@ -40,7 +40,6 @@ struct SingleImageView: View {
         }
         .onTapGesture {
             if currentImage.isAbleToSelect{
-                print("currentImage.isSelected", currentImage.isSelected)
                 if !currentImage.isSelected{
                     withAnimation(.easeIn(duration: 0.1)){
                         imgWidthAndHeight += 10
