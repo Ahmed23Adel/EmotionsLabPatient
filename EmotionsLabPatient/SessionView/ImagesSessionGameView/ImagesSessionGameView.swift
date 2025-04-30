@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ImagesSessionGameView: View {
+    @Environment(\.dismiss) var dismiss
     var currentSession: ImagesSession
     @StateObject var viewModel = ImagesSessionGameViewModel()
     var body: some View {
@@ -24,6 +25,11 @@ struct ImagesSessionGameView: View {
         }
         .onAppear{
             viewModel.setCurrentSession(currentSession)
+        }
+        .onChange(of: viewModel.isGameFinished){
+            if viewModel.isGameFinished{
+                dismiss()
+            }
         }
     }
 }

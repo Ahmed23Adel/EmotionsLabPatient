@@ -16,6 +16,8 @@ class ImagesSessionGameViewModel: ObservableObject{
     var selectedImage: SingleImage?
     var selectedName: SingleImageName?
     
+    @Published var isGameFinished = false
+    
     init(){
         emotionsImages = gameData.emotionsImages
         emotionNames = gameData.emotionNames
@@ -40,6 +42,8 @@ class ImagesSessionGameViewModel: ObservableObject{
         if let selectedName = selectedName, let selectedImage = selectedImage{
             if validateSelection(img: selectedImage, name: selectedName){
                 // user selected both image and name but they are correct
+                saveResultOnCorrect(selectedName: selectedName,
+                                    selectedImage: selectedImage)
                 resetSelectionOnCorrectMatch(
                     selectedName: selectedName,
                     selectedImage: selectedImage)
@@ -50,6 +54,8 @@ class ImagesSessionGameViewModel: ObservableObject{
         } else {
             storeSelectedImageOrName(selectedName: selectedName, selectedImage: selectedImage)
         }
+        
+        checkIfGameOverAndClose()
     }
     
     func resetSelectionOnCorrectMatch(selectedName: SingleImageName, selectedImage: SingleImage){
@@ -107,5 +113,20 @@ class ImagesSessionGameViewModel: ObservableObject{
         selectedName.isSelected = false
         selectedImage.isSelected = false
     }
+    
+    func saveResultOnCorrect(selectedName: SingleImageName, selectedImage: SingleImage){
+        let emotionSelected = selectedName.emotionName
+        emotionNumbersShown[emotionSelected]! -= 1
+    }
+    
+    func checkIfGameOverAndClose(){
+        if isGameOver(){
+            isGameFinished = true
+        }
+    }
+    func isGameOver() -> Bool{
+        emotionNumbersShown.allSatisfy { $0.value == 0 }
+    }
+    
     
 }
