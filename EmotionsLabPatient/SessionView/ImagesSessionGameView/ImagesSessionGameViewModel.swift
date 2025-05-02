@@ -15,13 +15,19 @@ class ImagesSessionGameViewModel: ObservableObject{
     @Published var emotionNumbersShown: [String: Int] = [:]
     var selectedImage: SingleImage?
     var selectedName: SingleImageName?
+    let errorDetailContainer:ErrorDetailsContainer
+    let gameResults = GameResults()
     
+    @Published var isUploadingResults = false
+    @Published var isShowCoins = false
     @Published var isGameFinished = false
+    var onSessionFinished: () -> Void = {}
     
     init(){
         emotionsImages = gameData.emotionsImages
         emotionNames = gameData.emotionNames
         emotionNumbersShown = gameData.emotionNumbersShown
+        errorDetailContainer = ErrorDetailsContainer(emotionsNames: gameData.basicEmotionNames)
         
     }
     func setCurrentSession(_ session: ImagesSession) {
@@ -49,6 +55,7 @@ class ImagesSessionGameViewModel: ObservableObject{
                     selectedImage: selectedImage)
             } else {
                 // user selected both image and name but they are incorrect
+                errorDetailContainer.incrementErrorForImage(image: selectedImage)
                 showSelectError(selectedName: selectedName, selectedImage: selectedImage)
             }
         } else {
@@ -121,12 +128,52 @@ class ImagesSessionGameViewModel: ObservableObject{
     
     func checkIfGameOverAndClose(){
         if isGameOver(){
-            isGameFinished = true
+            Task{
+                setStateUploadingResults()
+                let resultId = await gameResults.endGame(session: currentSession)
+                await errorDetailContainer.uploadResultsErrors(resultId: resultId)
+                await currentSession.setStateFinishedAndUpload()
+                onSessionFinished()
+                setStateShowCoins()
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                setStateGameFinished()
+            }
+            
         }
     }
     func isGameOver() -> Bool{
         emotionNumbersShown.allSatisfy { $0.value == 0 }
     }
     
+    private func setStateUploadingResults(){
+        DispatchQueue.main.async{
+            self.isUploadingResults = true
+            self.isShowCoins = false
+            self.isGameFinished = false
+        }
+        
+    }
+    
+    private func setStateShowCoins(){
+        DispatchQueue.main.async{
+            self.isUploadingResults = false
+            self.isShowCoins = true
+            self.isGameFinished = false
+        }
+    }
+    
+    private func setStateGameFinished(){
+        DispatchQueue.main.async{
+            self.isUploadingResults = false
+            self.isShowCoins = false
+            self.isGameFinished = true
+        }
+    }
+    
+    func setFuncOnSessionFinshed(onSessionFinished: @escaping () -> Void){
+        self.onSessionFinished = onSessionFinished
+        
+    }
+   
     
 }

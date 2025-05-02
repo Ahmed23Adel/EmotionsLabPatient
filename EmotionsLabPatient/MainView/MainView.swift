@@ -84,9 +84,9 @@ struct MainView: View {
                         if !viewModel.todayActiveSessions.isEmpty {
                             ScrollView {
                                 VStack(spacing: 10) {
-                                    ForEach(viewModel.todayActiveSessions, id: \.id) { session in
-                                        if let imageSession = session as? ImagesSession {
-                                            NavigationLink(destination: ImagesSessionVideosView(currentSession: imageSession)) {
+                                    ForEach(viewModel.todayActiveSessions.filter({ $0.status == .scheduled }), id: \.id) { session in
+                                        if let imageSession = session as? ImagesSession{
+                                            NavigationLink(destination: ImagesSessionVideosView(currentSession: imageSession, onSessionFinished: {  viewModel.refreshSessions() })) {
                                                 HStack(spacing: 4) {
                                                     Text("Scheduled")
                                                         .font(.headline)

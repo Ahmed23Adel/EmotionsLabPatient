@@ -7,11 +7,11 @@
 
 import Foundation
 
-
 class ImagesSession: Session{
     var id: UUID
     var sessionId: UUID
-    var status: SessionStatus
+    @Published var status: SessionStatus
+    private let apiCaller = ApiCaller()
     
     init(sessionId: UUID, status: SessionStatus){
         self.sessionId = sessionId
@@ -19,4 +19,21 @@ class ImagesSession: Session{
         self.id = sessionId
     }
     
+    func setStateFinishedAndUpload() async {
+        await MainActor.run {
+            self.status = .finished
+        }
+        do{
+            let _ = try await apiCaller.callApiWithToken(
+                endpoint: "sessions/finish",
+                method: .put,
+                token: Patient.shared.authAccess.accessTokenValue,
+                body: [
+                    "session_id": String(sessionId.uuidString)
+                ]
+            )
+        } catch {
+            print("set finished error", error)
+        }
+    }
 }

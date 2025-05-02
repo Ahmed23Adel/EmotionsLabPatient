@@ -17,7 +17,9 @@ class MainViewModel: ObservableObject{
     @Published var isActiveSessionToday = false
     @Published var numScheduleSessionsToday = 0
     @Published var isLoadingSessions = true
-    @Published var todayActiveSessions: [any Session] = []
+    @Published var todayActiveSessions: [any ObservableObject & Session] = []
+
+    
     
     init(){
         Task{
@@ -28,6 +30,7 @@ class MainViewModel: ObservableObject{
                 
             } catch TimePeriodError.noTimePeriod {
                 showNoActivePeriod()
+                showNoActiveSession()
             } catch SessionError.noActiveSessionToday{
                 showNoActiveSession()
             }
@@ -63,6 +66,7 @@ class MainViewModel: ObservableObject{
     }
     
     private func showNoActiveSession(){
+        isLoadingSessions = false
         isActiveSessionToday = false
     }
     private func loadActiveSessions() async throws {
@@ -112,5 +116,10 @@ class MainViewModel: ObservableObject{
     }
     private func loadTodaySessionLocal(){
         todayActiveSessions = timePeriod.todayActiveSessions
+    }
+    
+    func refreshSessions() {
+        todayActiveSessions = timePeriod.todayActiveSessions
+        numTodaySessions -= 1
     }
 }

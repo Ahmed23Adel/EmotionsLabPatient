@@ -10,8 +10,9 @@ import WebKit
 
 struct ImagesSessionVideosView: View {
     @StateObject var viewModel = ImagesSessionVideoViewModel()
+    @ObservedObject var currentSession: ImagesSession
+    var onSessionFinished: () -> Void
     
-    var currentSession: ImagesSession
     var body: some View {
         NavigationStack{
             ZStack{
@@ -39,7 +40,7 @@ struct ImagesSessionVideosView: View {
                 viewModel.setSession(session: currentSession)
             }
             .navigationDestination(isPresented: $viewModel.navigateToNext) {
-                ImagesSessionGameView(currentSession: currentSession)
+                ImagesSessionGameView(currentSession: currentSession, onSessionFinished:  onSessionFinished)
             }
 
         }
@@ -63,5 +64,7 @@ struct YouTubeView: UIViewRepresentable {
 }
 
 #Preview {
-    ImagesSessionVideosView(currentSession: ImagesSession(sessionId: UUID(), status: .scheduled))
+    ImagesSessionVideosView(currentSession: ImagesSession(sessionId: UUID(), status: .scheduled), onSessionFinished: {
+        
+    })
 }

@@ -11,20 +11,28 @@ struct ImagesSessionGameView: View {
     @Environment(\.dismiss) var dismiss
     var currentSession: ImagesSession
     @StateObject var viewModel = ImagesSessionGameViewModel()
+    var onSessionFinished: () -> Void
     var body: some View {
         ZStack{
             CustomBackground()
                 .blur(radius: 5)
-            VStack{
-                
-                MultipleImagesView(emotionsImages: $viewModel.emotionsImages, selectCurrentImageParentFunc: viewModel.imageSelect)
-                MultiplieImageNamesView(emotionNames: $viewModel.emotionNames, selectCurrentNameParentFunc: viewModel.nameSelect)
+            if viewModel.isUploadingResults{
+                ProgressView("Please wait...")
+            } else if viewModel.isShowCoins{
+                StackedCoinsView()
+            } else{
+                VStack{
+                    MultipleImagesView(emotionsImages: $viewModel.emotionsImages, selectCurrentImageParentFunc: viewModel.imageSelect)
+                    MultiplieImageNamesView(emotionNames: $viewModel.emotionNames, selectCurrentNameParentFunc: viewModel.nameSelect)
+                }
             }
+            
             
             
         }
         .onAppear{
             viewModel.setCurrentSession(currentSession)
+            viewModel.setFuncOnSessionFinshed(onSessionFinished: onSessionFinished)
         }
         .onChange(of: viewModel.isGameFinished){
             if viewModel.isGameFinished{
@@ -37,5 +45,8 @@ struct ImagesSessionGameView: View {
 
 
 #Preview {
-    ImagesSessionGameView(currentSession: ImagesSession(sessionId: UUID(), status: .scheduled))
+    
+    ImagesSessionGameView(currentSession: ImagesSession(sessionId: UUID(), status: .scheduled), onSessionFinished: {
+        
+    })
 }

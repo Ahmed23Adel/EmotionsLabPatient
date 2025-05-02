@@ -7,7 +7,8 @@
 
 import Foundation
 
-protocol Session: Identifiable {
-    var id: UUID { get }
+protocol Session: AnyObject, Identifiable, ObservableObject {
+    var sessionId: UUID { get }
     var status: SessionStatus { get set }
+    func setStateFinishedAndUpload() async
 }

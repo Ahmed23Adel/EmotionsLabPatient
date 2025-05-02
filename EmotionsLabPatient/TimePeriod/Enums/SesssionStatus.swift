@@ -10,5 +10,5 @@ import Foundation
 
 enum SessionStatus{
     case scheduled
-    case done
+    case finished
 }
