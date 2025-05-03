@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 class ImagesSessionGameViewModel: ObservableObject{
     @Published var currentSession = ImagesSession (sessionId: UUID(), status: .scheduled)
@@ -22,7 +23,8 @@ class ImagesSessionGameViewModel: ObservableObject{
     @Published var isShowCoins = false
     @Published var isGameFinished = false
     var onSessionFinished: () -> Void = {}
-    
+    private var audioPlayer: AVAudioPlayer?
+
     init(){
         emotionsImages = gameData.emotionsImages
         emotionNames = gameData.emotionNames
@@ -135,6 +137,7 @@ class ImagesSessionGameViewModel: ObservableObject{
                 await currentSession.setStateFinishedAndUpload()
                 onSessionFinished()
                 setStateShowCoins()
+                playCoinsDroppingSound()
                 try? await Task.sleep(nanoseconds: 2_000_000_000)
                 setStateGameFinished()
             }
@@ -173,6 +176,26 @@ class ImagesSessionGameViewModel: ObservableObject{
     func setFuncOnSessionFinshed(onSessionFinished: @escaping () -> Void){
         self.onSessionFinished = onSessionFinished
         
+    }
+    
+    func playCoinsDroppingSound() {
+        guard let soundURL = Bundle.main.url(forResource: "coinsDropping", withExtension: "mp3") else {
+            print("No sound file")
+            return
+        }
+
+        do {
+            // Use the class-level property instead of a local variable
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.play()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                self?.audioPlayer?.stop()
+            }
+        } catch {
+            print("Failed to play sound: \(error.localizedDescription)")
+        }
     }
    
     

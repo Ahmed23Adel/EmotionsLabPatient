@@ -18,6 +18,7 @@ class GameResults{
     func endGame(session: ImagesSession) async -> String{
         setEndTime()
         calcCoins()
+        await updateCoins(coinsAchieved: coins)
         return await uploadGameResults(session: session)
     }
     
@@ -56,5 +57,20 @@ class GameResults{
     
     private func getTimeTakenInSeconds() -> Int{
         Int(endTime.timeIntervalSince(startTime))
+    }
+    
+    private func updateCoins(coinsAchieved: Int) async {
+        do{
+            let _ = try await apiCaller.callApiWithToken(
+                endpoint: "increase-coins",
+                method: .put,
+                token: currentPatient.authAccess.accessTokenValue,
+                body: [
+                    "amount": String(coinsAchieved)
+                ]
+            )
+        } catch{
+            
+        }
     }
 }
