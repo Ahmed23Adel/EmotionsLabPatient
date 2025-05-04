@@ -18,7 +18,7 @@ class MainViewModel: ObservableObject{
     @Published var numScheduleSessionsToday = 0
     @Published var isLoadingSessions = true
     @Published var todayActiveSessions: [any ObservableObject & Session] = []
-
+    @Published var isShowBuyAvatarSheet = false
     
     
     init(){
@@ -122,4 +122,9 @@ class MainViewModel: ObservableObject{
         todayActiveSessions = timePeriod.todayActiveSessions
         numTodaySessions -= 1
     }
+    
+    func goToBuyAvatarSheet(){
+        isShowBuyAvatarSheet = true
+    }
+    
 }

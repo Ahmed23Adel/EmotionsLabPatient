@@ -13,8 +13,24 @@ struct MainView: View {
     
     var body: some View {
         NavigationStack{
+            
             ZStack{
                 CustomBackground()
+                VStack{
+                    Spacer()
+                    HStack{
+                        Button{
+                            viewModel.goToBuyAvatarSheet()
+                        } label: {
+                            Image("cart")
+                                .resizable()
+                                .frame(width: 130, height: 130)
+                                .padding(30)
+                        }
+                        
+                        Spacer()
+                    }
+                }
                 VStack{
                     HStack{
                         if viewModel.isTimePeriodLoading{
@@ -125,6 +141,9 @@ struct MainView: View {
                 
             }
         }
+        .sheet(isPresented: $viewModel.isShowBuyAvatarSheet){
+            BuyAvatarView()
+        }
     }
 }
 struct CounterView: View {
@@ -185,6 +204,7 @@ struct CounterView: View {
                 }
             }
         }
+            
     }
 }
 
