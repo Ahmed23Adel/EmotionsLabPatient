@@ -22,10 +22,19 @@ struct MainView: View {
                         Button{
                             viewModel.goToBuyAvatarSheet()
                         } label: {
-                            Image("cart")
-                                .resizable()
-                                .frame(width: 130, height: 130)
-                                .padding(30)
+                            VStack{
+                                Image("cart")
+                                    .resizable()
+                                    .frame(width: 130, height: 130)
+                                    .padding(30)
+                                Text("Cart")
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.black)
+                            }
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(25)
+                            .padding(25)
+                            
                         }
                         
                         Spacer()
@@ -99,22 +108,11 @@ struct MainView: View {
                     VStack {
                         if !viewModel.todayActiveSessions.isEmpty {
                             ScrollView {
-                                VStack(spacing: 10) {
+                                HStack(spacing: 10) {
                                     ForEach(viewModel.todayActiveSessions.filter({ $0.status == .scheduled }), id: \.id) { session in
                                         if let imageSession = session as? ImagesSession{
-                                            NavigationLink(destination: ImagesSessionVideosView(currentSession: imageSession, onSessionFinished: {  viewModel.refreshSessions() })) {
-                                                HStack(spacing: 4) {
-                                                    Text("Scheduled")
-                                                        .font(.headline)
-                                                        .foregroundColor(Color.green)
-                                                    
-                                                    Text("Click to start")
-                                                        .font(.headline)
-                                                        .foregroundColor(Color.mint)
-                                                }
-                                                .padding(15)
-                                                .background(Color.white.opacity(0.8))
-                                                .cornerRadius(25)
+                                            NavigationLink(destination: ImagesSessionGameView(currentSession: imageSession, onSessionFinished: {  viewModel.refreshSessions() })) {
+                                                CustomButtonStyle(text: "Start")
                                             }
                                         }
                                     }

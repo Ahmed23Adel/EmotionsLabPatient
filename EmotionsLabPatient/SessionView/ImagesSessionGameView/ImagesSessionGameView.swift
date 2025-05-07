@@ -14,8 +14,8 @@ struct ImagesSessionGameView: View {
     var onSessionFinished: () -> Void
     var body: some View {
         ZStack{
-            CustomBackground()
-                .blur(radius: 5)
+            Color(red: 25/255, green: 166/255, blue: 220/255)
+                .ignoresSafeArea()
             if viewModel.isUploadingResults{
                 ProgressView("Please wait...")
             } else if viewModel.isShowCoins{
