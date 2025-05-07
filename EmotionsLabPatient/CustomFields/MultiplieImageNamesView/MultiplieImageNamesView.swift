@@ -45,7 +45,7 @@ struct MultiplieImageNamesView: View {
                 Spacer()
                 ForEach(imageNames.indices, id: \.self) { colIndex in
                     SingleImageNameWithAnimationView(currentSingleName: imageNames[colIndex], selectCurrentNameParentFunc: selectCurrentNameParentFunc)
-                        .padding(.horizontal, CGFloat.random(in: 10...40))
+                        .padding(.horizontal, 15)
                 }
                 Spacer()
             }
