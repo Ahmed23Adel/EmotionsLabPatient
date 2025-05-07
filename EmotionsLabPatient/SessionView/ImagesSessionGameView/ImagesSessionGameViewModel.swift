@@ -75,10 +75,10 @@ class ImagesSessionGameViewModel: ObservableObject{
         self.selectedName = nil
     }
     func storeSelectedImageOrName(selectedName: SingleImageName?, selectedImage: SingleImage?){
-        if let selectedName = selectedImage {
+        if let selectedName = selectedName {
             selectedName.isSelected = true
-            gameData.enableSelectionForAllNames()
-            gameData.disableSelectionForAllImages()
+            gameData.enableSelectionForAllImages()
+            gameData.disableSelectionForAllNames()
         }
         if let selectedImage = selectedImage {
             selectedImage.isSelected = true

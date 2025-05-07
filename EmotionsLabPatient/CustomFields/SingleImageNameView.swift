@@ -61,20 +61,16 @@ struct SingleImageNameView: View {
                 .frame(width: imgWidthSmall, height: imgHeightSmall)
             CustomText(text: currentSingleName.emotionName.capitalizingFirstLetter())
         }
-        .onTapGesture{
+        .onTapGesture {
             if currentSingleName.isAbleToSelect{
-                if !currentSingleName.isSelected{
-                    withAnimation(.easeIn(duration: 0.1)){
-                        selectName()
-                    }
-                } else{
-                    withAnimation(.easeIn(duration: 0.1)){
-                        unSelectName()
-                    }
-                }
                 currentSingleName.isSelected.toggle()
                 selectCurrentNameParentFunc(currentSingleName)
+                
+                
             }
+        }
+        .onChange(of: currentSingleName.isSelected){
+            SelectOrUnselectView()
         }
     }
     
@@ -90,6 +86,19 @@ struct SingleImageNameView: View {
         imgHeightBig -= 10
         imgWidthSmall -= 10
         imgHeightSmall -= 10
+    }
+    
+    private func SelectOrUnselectView(){
+        if currentSingleName.isSelected{
+            withAnimation(.easeIn(duration: 0.1)){
+                selectName()
+            }
+        } else{
+            withAnimation(.easeIn(duration: 0.1)){
+                unSelectName()
+            }
+        }
+        
     }
 }
 

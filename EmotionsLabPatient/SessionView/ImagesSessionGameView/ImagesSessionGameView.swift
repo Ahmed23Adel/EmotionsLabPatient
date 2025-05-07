@@ -81,7 +81,6 @@ struct ImagesSessionGameView: View {
     // Function to handle the exit logic
     private func handleExit(reason: String) {
         print("User exited because: \(reason)")
-        onSessionFinished()
         dismiss()
     }
 }
