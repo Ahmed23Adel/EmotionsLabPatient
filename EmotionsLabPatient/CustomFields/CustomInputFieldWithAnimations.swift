@@ -54,7 +54,7 @@ struct CustomInputFieldWithAnimations<Content: View>: View {
 
 
 #Preview {
-    @State var tmp = ""
+    @Previewable @State var tmp = ""
     CustomInputFieldWithAnimations(placeholder: "tmp", text: $tmp){
         Text("")
     }

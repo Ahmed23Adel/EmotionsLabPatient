@@ -17,7 +17,7 @@ struct SignUpView: View {
                
                 VStack(spacing: 0){
                     CustomInputFieldWithAnimations(placeholder: "Username", text: $viewModel.username) {
-                        CustomButton(text: "Confirm"){
+                        CustomButton(text: "Confirm", height: 110){
                             Task{
                                 await viewModel.trySignup()
                             }
@@ -44,6 +44,8 @@ struct SignUpView: View {
             .navigationDestination(isPresented: $isNavigateToMainViewLocal) {
                             MainView()
                         }
+            .navigationBarBackButtonHidden(true)
+            .interactiveDismissDisabled()
             .onChange(of: viewModel.isNavigateToMainView) { newValue in
                 if newValue {
                     isNavigateToMainViewLocal = true
@@ -56,58 +58,6 @@ struct SignUpView: View {
 }
 
 
-struct CustomButtonStyle: View {
-    var text: String
-    var height: CGFloat = 80
-
-    var body: some View {
-        Text(text)
-            .font(.system(size: 24, weight: .bold))
-            .foregroundColor(.white)
-            .frame(minWidth: height, minHeight: height)
-            .background(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.red)
-                    
-                    RoundedRectangle(cornerRadius: 25)
-                        .strokeBorder(
-                            StripedBorderPattern(stripeCount: 12),
-                            lineWidth: 8
-                        )
-                }
-            )
-            .shadow(color: Color.black.opacity(0.3), radius: 3, x: 0, y: 2)
-    }
-}
-
-struct CustomButton: View {
-    var text: String
-    var action: () -> Void
-    var height: CGFloat = 80
-
-    var body: some View {
-        Button(action: action) {
-            CustomButtonStyle(text: text, height: height)
-        }
-    }
-}
-
-
-struct StripedBorderPattern: ShapeStyle {
-    let stripeCount: Int
-    
-    func resolve(in environment: EnvironmentValues) -> some ShapeStyle {
-        LinearGradient(
-            gradient: Gradient(colors: [
-                Color.white.opacity(0.9),
-                Color.red
-            ]),
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-    }
-}
 
 
 #Preview {

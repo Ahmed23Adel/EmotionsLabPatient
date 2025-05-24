@@ -55,9 +55,9 @@ struct VibratingView<Content: View>: View {
 }
 
 #Preview {
-    @State var randomBool = true
+    @Previewable @State var randomBool = true
     
-    return VibratingView(triggerVibration: $randomBool, vibratingData: VibratingData()){
+    VibratingView(triggerVibration: $randomBool, vibratingData: VibratingData()){
         Text("Random text")
     }
 }

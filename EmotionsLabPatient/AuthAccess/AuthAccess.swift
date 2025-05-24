@@ -45,7 +45,7 @@ class AuthAccess: ObservableObject{
     }
 
     func tryReadRefreshTokenFromKeyChainAndValidate() -> Bool {
-       tryReadTokenFromKeyChainAndValidate(
+       let _ = tryReadTokenFromKeyChainAndValidate(
            account: refreshTokenAccount,
            setTokenValue: { self.refreshTokenValue = $0 },
            setIsStored: { self.isRefreshTokenStored = $0 },
@@ -165,5 +165,10 @@ class AuthAccess: ObservableObject{
         self.accessTokenValue = accessToken
         self.refreshTokenValue = refreshToken
         saveAccessAndRefreshValues()
+    }
+    
+    func logout(){
+        KeychainHelper.shared.delete(service: serviceName, account: accessTokenAccount)
+        KeychainHelper.shared.delete(service: serviceName, account: refreshTokenAccount)
     }
 }

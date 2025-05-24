@@ -9,50 +9,68 @@ struct ImagesSessionGameView: View {
     // Add new state variables
     @State private var showExitAlert = false
     @State private var selectedExitReason: ExitReason?
-    
-    // Enum for exit reasons
-    enum ExitReason: String, CaseIterable, Identifiable {
-        case tired = "I'm tired"
-        case tooHard = "This is too hard"
-        case other = "Other reason"
+    @State private var isPaused = false
         
-        var id: String { self.rawValue }
-    }
-    
     var body: some View {
         ZStack {
-            Color(red: 25/255, green: 166/255, blue: 220/255)
-                .ignoresSafeArea()
+            if viewModel.chosenBakcground != "noBackground" {
+                Image(viewModel.chosenBakcground)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+            }
             
             VStack(spacing: 0) {
-                // Header with home button
-                HStack {
+                // MARK: Header with pause and home buttons
+                HStack (spacing: 10) {
                     Spacer()
+                    
+                    // MARK:  Pause/Resume button
+                    Button(action: {
+                        
+                        isPaused.toggle()
+                        if isPaused{
+                            viewModel.pauseGame()
+                        }
+                    }) {
+                        pauseResumeButtonImage
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.top, 60)
+                    
+                    // MARK:  Home/Exit button
                     Button(action: {
                         showExitAlert = true
                     }) {
-                        Image(systemName: "house.fill")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .padding()
+                        homeButtonImage
                     }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.top, 60)
+                    .padding(.trailing, 10)
                 }
                 
-                Spacer()
-                
+                // Content immediately after header (no Spacer here)
                 if viewModel.isUploadingResults {
                     ProgressView("Please wait...")
                         .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if viewModel.isShowCoins {
                     StackedCoinsView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     VStack {
                         MultipleImagesView(emotionsImages: $viewModel.emotionsImages, selectCurrentImageParentFunc: viewModel.imageSelect)
                         MultiplieImageNamesView(emotionNames: $viewModel.emotionNames, selectCurrentNameParentFunc: viewModel.nameSelect)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .disabled(isPaused) // Disable interaction when paused
                 }
-                
-                Spacer()
+            }
+            
+            // MARK:  Pause overlay
+            if isPaused {
+                pauseOverlay
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -78,14 +96,64 @@ struct ImagesSessionGameView: View {
         }
     }
     
-    // Function to handle the exit logic
+    private var homeButtonImage: some View {
+        Image("homeIconNoBackground")
+            .resizable()
+            .frame(width: 50, height: 50)
+    }
+    
+    private var pauseResumeButtonImage: some View {
+         // playNullImage will make the image empty
+        Image(isPaused ? "playNullImage" : "pause")
+            .resizable()
+            .frame(width: 50, height: 50)
+    }
+    
+    private var pauseOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.6)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 30) {
+                Button(action: {
+                    isPaused = false
+                }) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: 120, height: 120)
+                            .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+                        
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 50))
+                            .foregroundColor(Color(red: 35/255, green: 75/255, blue: 98/255))
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                Text("Game Paused")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                
+                Text("Tap the play button to continue")
+                    .font(.body)
+                    .foregroundColor(.white.opacity(0.8))
+
+                
+            }
+        }
+    }
+    
     private func handleExit(reason: String) {
-        print("User exited because: \(reason)")
+        Task {
+            await viewModel.uploadExitReason(exitReason: reason)
+        }
+        
         dismiss()
     }
 }
 
-// Preview
 #Preview {
     ImagesSessionGameView(currentSession: ImagesSession(sessionId: UUID(), status: .scheduled), onSessionFinished: {
         

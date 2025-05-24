@@ -60,7 +60,7 @@ struct MultipleImagesView: View {
 }
 
 #Preview {
-    @State var emotionsImages: [String: [SingleImage]] = [
+    @Previewable @State var emotionsImages: [String: [SingleImage]] = [
         "Happy": [
             SingleImage(imageName: "happy1", emotionName: "Happy"),
             SingleImage(imageName: "happy2", emotionName: "Happy"),

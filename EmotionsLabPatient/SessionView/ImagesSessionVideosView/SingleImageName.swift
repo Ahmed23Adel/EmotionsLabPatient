@@ -13,6 +13,9 @@ class SingleImageName: VibratingData, Identifiable, Equatable {
     @Published var isSelected: Bool = false
     @Published var isHide: Bool = false
     @Published var isAbleToSelect = true
+    @Published var isTutorialState = false
+    @Published var isTutorialShowIndicator =  false
+    
     init(emotionName: String) {
         self.emotionName = emotionName
     }

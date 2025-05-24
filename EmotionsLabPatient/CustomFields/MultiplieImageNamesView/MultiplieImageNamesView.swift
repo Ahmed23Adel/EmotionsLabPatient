@@ -53,7 +53,7 @@ struct MultiplieImageNamesView: View {
     }
 }
 #Preview {
-    @State var emotionNames = [
+    @Previewable @State var emotionNames = [
         "happy" : [
             SingleImageName(emotionName: "happy"),
             SingleImageName(emotionName: "happy"),

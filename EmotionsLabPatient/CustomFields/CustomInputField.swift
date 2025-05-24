@@ -90,6 +90,8 @@ struct CustomTextField: View {
                 .font(.largeTitle)
                 .foregroundColor(Color(red: 0.95, green: 0.65, blue: 0.2))
                 .fontWeight(.bold)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
         }
         .frame(width: 260, height: 80)
     }
@@ -97,6 +99,6 @@ struct CustomTextField: View {
 
 
 #Preview {
-    @State var tmp = ""
+    @Previewable @State var tmp = ""
     CustomInputField(placeholder: "tmp", text: $tmp)
 }

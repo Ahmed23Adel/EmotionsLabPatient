@@ -20,4 +20,13 @@ struct AppResetDetector{
             print("clearKeychainIfFirstLaunch Done")
         }
     }
+    
+    static func resetHasLuanchedBefore(){
+        UserDefaults.standard.set(false, forKey: hasLaunchedBeforeKey)
+        UserDefaults.standard.synchronize()
+        KeychainHelper.shared.clearAll()
+        print("clearKeychainIfFirstLaunch unDone")
+    }
+    
+    
 }

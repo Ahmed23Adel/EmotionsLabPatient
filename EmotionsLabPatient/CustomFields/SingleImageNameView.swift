@@ -119,7 +119,7 @@ struct CustomText: View {
 
 
 #Preview {
-    @State var currentSingleName = SingleImageName(emotionName: "Happy")
+    @Previewable @State var currentSingleName = SingleImageName(emotionName: "Happy")
     let dummyFunc: (SingleImageName) -> Void = { image in
         print("Dummy function called with: \(image)")
     }

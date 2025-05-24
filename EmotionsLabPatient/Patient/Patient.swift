@@ -63,7 +63,7 @@ class Patient{
                 if try parseSignupDataAndSave(data: data) {
                     setUserName(username: username)
                 }
-        } catch let error as ApiCallingErrorDetails{
+        } catch{
             throw SignupError.invalidUsername
         }
     }
@@ -86,5 +86,11 @@ class Patient{
         
     }
     
+    
+    func logout(){
+        KeychainHelper.shared.delete(service: serviceName, account: usernameAccount)
+        authAccess.logout()
+    }
+ 
     
 }

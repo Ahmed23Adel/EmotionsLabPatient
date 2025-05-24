@@ -35,7 +35,7 @@ struct SingleImageWithAnimationView: View {
 }
 
 #Preview {
-    @State var currentImage = SingleImage(imageName: "happy1", emotionName: "happy")
+    @Previewable @State var currentImage = SingleImage(imageName: "happy1", emotionName: "happy")
     let dummyFunc: (SingleImage, Bool) -> Void = { image, isSelected in
         print("Dummy function called with: \(image), selected: \(isSelected)")
     }

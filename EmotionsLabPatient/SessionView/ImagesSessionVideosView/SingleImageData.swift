@@ -14,10 +14,13 @@ class SingleImage: VibratingData, Identifiable, Equatable {
     @Published var isSelected: Bool = false
     @Published var isHide: Bool = false
     @Published var isAbleToSelect = true
+    @Published var isTutorialState = false
+    @Published var isTutorialShowIndicator =  false
     
-    init(imageName: String, emotionName: String) {
+    init(imageName: String, emotionName: String, isTutorialState: Bool = false, isTutorialShowIndicator: Bool = false) {
         self.imageName = imageName
         self.emotionName = emotionName
+        self.isTutorialState = isTutorialState
     }
     
     static func == (lhs: SingleImage, rhs: SingleImage) -> Bool {
@@ -27,4 +30,6 @@ class SingleImage: VibratingData, Identifiable, Equatable {
     static func != (lhs: SingleImage, rhs: SingleImage) -> Bool {
         lhs.id != rhs.id
     }
+    
+   
 }

@@ -16,59 +16,29 @@ struct MainView: View {
             
             ZStack{
                 CustomBackground()
+                    
+                // MARK: Extra buttons
+                bottomRightMainButton(fnAction: viewModel.goToBuyAvatarSheet, imgName: "cart", text: "Cart")
+                bottomLeftMainButton(fnAction: viewModel.goToSettingsSheet, imgName: "settings", text: "Settings")
                 VStack{
-                    Spacer()
-                    HStack{
-                        Button{
-                            viewModel.goToBuyAvatarSheet()
-                        } label: {
-                            VStack{
-                                Image("cart")
-                                    .resizable()
-                                    .frame(width: 130, height: 130)
-                                    .padding(30)
-                                Text("Cart")
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.black)
-                            }
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(25)
-                            .padding(25)
-                            
-                        }
-                        
-                        Spacer()
-                    }
-                }
-                VStack{
+                    // MARK: Time period sentence
                     HStack{
                         if viewModel.isTimePeriodLoading{
                             ProgressView("")
                         } else{
                             Text("You have")
                                 .font(.title)
-                                .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
-                            
+                                .foregroundColor(Color(red: 35/255, green: 75/255, blue: 98/255))
                             if viewModel.isActiveTimePeriod{
-                                Text("active")
-                                    .font(.title)
-                                    .foregroundColor(Color.brown)
+                                HeaderText(text: "active", isBold: true)
+                                
                             } else{
-                                Text("no active")
-                                    .font(.title)
-                                    .foregroundColor(Color.red)
+                                HeaderText(text: "no active", isBold: true)
                             }
                            
-                            
-                            Text(" time period")
-                                .font(.title)
-                                .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
-                            
+                            HeaderText(text: " time period")
                             
                         }
-                        
-                        
-                        
                         Image("alex")
                             .resizable()
                             .scaledToFit()
@@ -82,53 +52,57 @@ struct MainView: View {
                         
                         
                     }
-                    Text("Today")
-                        .font(.title2)
-                        .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
+                    // MARK: Today
+                    HeaderText(text: "Today")
+                   
+                    // MARK: Number of sessions
                     HStack{
-                        Text("You have ")
-                            .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
+                        HeaderText(text: "You have ")
                         if viewModel.isLoadingSessions{
                             ProgressView("")
                         } else {
                             if viewModel.isActiveSessionToday{
                                 CounterView(finalValue: viewModel.numTodaySessions)
                             } else{
+                                HeaderText(text: "No", isBold: true)
                                 Text("No")
-                                    .foregroundColor(Color.red)
+                                    .foregroundColor(Color(red: 35/255, green: 75/255, blue: 98/255))
+                                    .font(.headline)
+                                    .fontWeight(.bold)
                             }
                         }
                         
-                        
-                        Text(" sessions to do")
-                            .foregroundColor(Color(red: 39/255, green: 84/255, blue: 138/255))
+                        HeaderText(text: " sessions to do")
                     }
                     
-                    // Replace your current List with this
+                    // MARK: Buttons to new game
                     VStack {
                         if !viewModel.todayActiveSessions.isEmpty {
-                            ScrollView {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                
                                 HStack(spacing: 10) {
+                                    Spacer()
                                     ForEach(viewModel.todayActiveSessions.filter({ $0.status == .scheduled }), id: \.id) { session in
                                         if let imageSession = session as? ImagesSession{
-                                            NavigationLink(destination: ImagesSessionGameView(currentSession: imageSession, onSessionFinished: {  viewModel.refreshSessions() })) {
-                                                CustomButtonStyle(text: "Start")
+                                            if viewModel.isNavigateToTutorial{
+                                                NavigationLink(destination: ImageSessionGameTutorialView (currentSession: imageSession, onSessionFinished: { viewModel.refreshSessionsTutorial() })) {
+                                                    CustomButtonStyle(text: "Start")
+                                                }
+                                            } else {
+                                                NavigationLink(destination: ImagesSessionGameView(currentSession: imageSession, onSessionFinished: { viewModel.refreshSessions() })) {
+                                                    CustomButtonStyle(text: "Start")
+                                                }
                                             }
                                         }
                                     }
+                                    Spacer()
                                 }
-                                .frame(maxWidth: 230) // Control the width here
+                                .frame(maxWidth: .infinity) // This centers the content within the ScrollView
                             }
-                            .frame(height: min(CGFloat(viewModel.todayActiveSessions.count) * 60, 180))
-                        } else {
-                            Text("No sessions scheduled for today")
-                                .foregroundColor(.secondary)
-                                .padding()
                         }
                     }
-                    .frame(maxWidth: 230) // This centers the content
-                    
-                    
+                    .frame(maxWidth: 270) // Keep the original constraint to maintain blur section width
+
                 }
                 .padding(50)
                 .background(
@@ -142,8 +116,19 @@ struct MainView: View {
         .sheet(isPresented: $viewModel.isShowBuyAvatarSheet){
             BuyAvatarView()
         }
+        .sheet(isPresented: $viewModel.isShowSettingsSheet){
+            SettingsSheet(onLogout: viewModel.onLogout)
+        }
+        .navigationDestination(isPresented: $viewModel.isNavigateToSignUpView){
+            SignUpView()
+        }
+        .navigationBarBackButtonHidden(true)
+        .interactiveDismissDisabled()
     }
+    
+    
 }
+// MARK: - Counter View for showing number of emotions
 struct CounterView: View {
     let finalValue: Int
     @State private var animationCount = 0

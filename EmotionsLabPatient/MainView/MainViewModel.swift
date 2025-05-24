@@ -19,9 +19,13 @@ class MainViewModel: ObservableObject{
     @Published var isLoadingSessions = true
     @Published var todayActiveSessions: [any ObservableObject & Session] = []
     @Published var isShowBuyAvatarSheet = false
-    
-    
+    @Published var isShowSettingsSheet = false
+    @Published var isNavigateToTutorial = false
+    @Published var isNavigateToSignUpView = false
     init(){
+    
+        isNavigateToTutorial = !isUserPlayedTutorialBefore()
+        print("init isNavigateToTutorial", isNavigateToTutorial)
         Task{
             do {
                 
@@ -36,6 +40,7 @@ class MainViewModel: ObservableObject{
             }
             
         }
+        
         
     }
     
@@ -119,12 +124,48 @@ class MainViewModel: ObservableObject{
     }
     
     func refreshSessions() {
-        todayActiveSessions = timePeriod.todayActiveSessions
-        numTodaySessions -= 1
+        DispatchQueue.main.async{
+            self.todayActiveSessions = self.timePeriod.todayActiveSessions
+            self.numTodaySessions -= 1
+            print("refreshSessions", self.isNavigateToTutorial)
+        }
+        
+        
+        
+    }
+    
+    func refreshSessionsTutorial() {
+        setUserPlayedTutorial()
+        isNavigateToTutorial = false
+        print("refreshSessionsTutorial", isNavigateToTutorial)
     }
     
     func goToBuyAvatarSheet(){
         isShowBuyAvatarSheet = true
     }
+    
+    func goToSettingsSheet(){
+        isShowSettingsSheet = true
+    }
+    
+    
+    
+    func isUserPlayedTutorialBefore() -> Bool{
+        let isUserPlayedTutorialBeforeKey = "isUserPlayedTutorialBefore"
+        let isUserPlayedTutorialBeforeValue = UserDefaults.standard.bool(forKey: isUserPlayedTutorialBeforeKey) // default false
+        return isUserPlayedTutorialBeforeValue
+    }
+    
+    func setUserPlayedTutorial(){
+        let isUserPlayedTutorialBeforeKey = "isUserPlayedTutorialBefore"
+        UserDefaults.standard.set(true, forKey: isUserPlayedTutorialBeforeKey)
+        UserDefaults.standard.synchronize()
+        print("saved setUserPlayedTutorial", )
+    }
+    
+    func onLogout(){
+        isNavigateToSignUpView = true
+    }
+    
     
 }

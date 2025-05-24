@@ -60,6 +60,17 @@ class GameData{
             
         }
     }
+    
+    func disableTutorialForAllImages(){
+        for tmpImgsInEmotion in emotionsImages.values{
+            for tmpImg in tmpImgsInEmotion{
+                tmpImg.isAbleToSelect = false
+                tmpImg.isTutorialShowIndicator = false
+            }
+            
+        }
+    }
+    
     func enableSelectionForAllImages(){
         for tmpImgsInEmotion in emotionsImages.values{
             for tmpImg in tmpImgsInEmotion{
@@ -82,6 +93,16 @@ class GameData{
         for tmpNameInEmotion in emotionNames.values{
             for tmpName in tmpNameInEmotion{
                 tmpName.isAbleToSelect = false
+            }
+            
+        }
+    }
+    
+    func disableTutorialForAllNames(){
+        for tmpNameInEmotion in emotionNames.values{
+            for tmpName in tmpNameInEmotion{
+                tmpName.isAbleToSelect = false
+                tmpName.isTutorialShowIndicator = false
             }
             
         }

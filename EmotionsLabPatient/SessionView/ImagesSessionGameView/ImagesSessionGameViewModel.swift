@@ -4,9 +4,17 @@
 //
 //  Created by ahmed on 19/04/2025.
 //
-
 import Foundation
 import AVFoundation
+import SwiftUI
+
+enum ExitReason: String, CaseIterable, Identifiable {
+    case tired = "I'm tired"
+    case tooHard = "This is too hard"
+    case other = "Other reason"
+    
+    var id: String { self.rawValue }
+}
 
 class ImagesSessionGameViewModel: ObservableObject{
     @Published var currentSession = ImagesSession (sessionId: UUID(), status: .scheduled)
@@ -22,26 +30,47 @@ class ImagesSessionGameViewModel: ObservableObject{
     @Published var isUploadingResults = false
     @Published var isShowCoins = false
     @Published var isGameFinished = false
+    @Published var isPaused = false  // Add pause state to view model
     var onSessionFinished: () -> Void = {}
     private var audioPlayer: AVAudioPlayer?
+    
+    @AppStorage("chosenBakcground") var chosenBakcground: String = "brightBackground1"
 
     init(){
         emotionsImages = gameData.emotionsImages
         emotionNames = gameData.emotionNames
         emotionNumbersShown = gameData.emotionNumbersShown
         errorDetailContainer = ErrorDetailsContainer(emotionsNames: gameData.basicEmotionNames)
-        
     }
+    
     func setCurrentSession(_ session: ImagesSession) {
         self.currentSession = session
     }
     
+    func pauseGame() {
+        isPaused = true
+    }
+    
+    func resumeGame() {
+        isPaused = false
+    }
+    
+    func togglePause() {
+        isPaused.toggle()
+    }
+    
     func imageSelect(selectedImage: SingleImage, newValue: Bool) {
+        // Don't allow selection when paused
+        guard !isPaused else { return }
+        
         self.selectedImage = selectedImage
         trySelectImgAndName(selectedName: selectedName, selectedImage: self.selectedImage)
     }
     
     func nameSelect(selectedName: SingleImageName){
+        // Don't allow selection when paused
+        guard !isPaused else { return }
+        
         self.selectedName = selectedName
         trySelectImgAndName(selectedName: self.selectedName, selectedImage: self.selectedImage)
     }
@@ -74,6 +103,7 @@ class ImagesSessionGameViewModel: ObservableObject{
         self.selectedImage = nil
         self.selectedName = nil
     }
+    
     func storeSelectedImageOrName(selectedName: SingleImageName?, selectedImage: SingleImage?){
         if let selectedName = selectedName {
             selectedName.isSelected = true
@@ -85,18 +115,16 @@ class ImagesSessionGameViewModel: ObservableObject{
             gameData.enableSelectionForAllNames()
             gameData.disableSelectionForAllImages()
         }
-        
-        
     }
     
     func hideImgAndName(selectedName: SingleImageName, selectedImage: SingleImage){
         selectedName.isHide = true
         selectedImage.isHide = true
     }
+    
     func validateSelection(img: SingleImage, name: SingleImageName) -> Bool{
         img.emotionName == name.emotionName
     }
-    
     
     func showSelectError(selectedName: SingleImageName, selectedImage: SingleImage){
         vibrateViews(selectedName: selectedName, selectedImage: selectedImage)
@@ -108,14 +136,12 @@ class ImagesSessionGameViewModel: ObservableObject{
         selectedImage.isShowError = true
     }
     
-    
     func resetSelection(selectedName: SingleImageName, selectedImage: SingleImage){
         unselectViews(selectedName: selectedName, selectedImage: selectedImage)
         gameData.enableSelectionForAllNames()
         gameData.enableSelectionForAllImages()
         self.selectedImage = nil
         self.selectedName = nil
-        
     }
     
     func unselectViews(selectedName: SingleImageName, selectedImage: SingleImage){
@@ -141,9 +167,9 @@ class ImagesSessionGameViewModel: ObservableObject{
                 try? await Task.sleep(nanoseconds: 2_000_000_000)
                 setStateGameFinished()
             }
-            
         }
     }
+    
     func isGameOver() -> Bool{
         emotionNumbersShown.allSatisfy { $0.value == 0 }
     }
@@ -154,7 +180,6 @@ class ImagesSessionGameViewModel: ObservableObject{
             self.isShowCoins = false
             self.isGameFinished = false
         }
-        
     }
     
     private func setStateShowCoins(){
@@ -175,7 +200,6 @@ class ImagesSessionGameViewModel: ObservableObject{
     
     func setFuncOnSessionFinshed(onSessionFinished: @escaping () -> Void){
         self.onSessionFinished = onSessionFinished
-        
     }
     
     func playCoinsDroppingSound() {
@@ -197,7 +221,22 @@ class ImagesSessionGameViewModel: ObservableObject{
             print("Failed to play sound: \(error.localizedDescription)")
         }
     }
-   
     
-    
+    func uploadExitReason(exitReason: String) async {
+        let apiCaller = ApiCaller()
+        do {
+            print("currentSession.sessionId.uuidString,", currentSession.sessionId.uuidString, exitReason )
+            _ = try await apiCaller.callApiWithToken(
+                endpoint: "add-session-exit-reason",
+                method: .post,
+                token: Patient.shared.authAccess.accessTokenValue,
+                body: [
+                    "session_id": currentSession.sessionId.uuidString,
+                    "reason": exitReason
+                ]
+            )
+        } catch {
+            
+        }
+    }
 }
