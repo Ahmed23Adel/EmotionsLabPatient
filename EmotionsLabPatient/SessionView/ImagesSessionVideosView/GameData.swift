@@ -20,23 +20,21 @@ class GameData{
         generateEmotionsImages()
     }
     
-    private func generateEmotionsImages(){
+    private func generateEmotionsImages() {
         for emotionName in basicEmotionNames {
-            let number1 = Int.random(in: 1...10)
-            let number2 = Int.random(in: 1...10)
-            let number3 = Int.random(in: 1...10)
-            emotionsImages[emotionName] = [
-                SingleImage(imageName: emotionName + String(number1), emotionName: emotionName),
-                SingleImage(imageName: emotionName + String(number2), emotionName: emotionName),
-                SingleImage(imageName: emotionName + String(number3), emotionName: emotionName),
-            ]
+            let uniqueNumbers = Array(1...10).shuffled().prefix(numImagesPerEmotion)
+            
+            emotionsImages[emotionName] = uniqueNumbers.map { number in
+                SingleImage(imageName: emotionName + String(number), emotionName: emotionName)
+            }
+            
             emotionNames[emotionName] = [
                 SingleImageName(emotionName: emotionName),
                 SingleImageName(emotionName: emotionName),
                 SingleImageName(emotionName: emotionName)
             ]
-            emotionNumbersShown[emotionName] = numImagesPerEmotion
             
+            emotionNumbersShown[emotionName] = numImagesPerEmotion
         }
     }
     

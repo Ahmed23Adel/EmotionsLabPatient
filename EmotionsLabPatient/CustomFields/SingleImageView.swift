@@ -21,11 +21,7 @@ struct SingleImageView: View {
         ZStack{
             RoundedRectangle(cornerRadius: 40)
                 .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: currentImage.isSelected ? selectedColorGradient : notSelectedColorGradient),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ),
+                    Color(red: 35/255, green: 75/255, blue: 98/255)
                     
                 )
                 .frame(width:imgWidthAndHeight, height: imgWidthAndHeight)
@@ -33,6 +29,7 @@ struct SingleImageView: View {
             
             Image(currentImage.imageName)
                 .resizable()
+                .scaledToFill()
                 .frame(width: 120, height: 120)
                 .cornerRadius(25)
                 
