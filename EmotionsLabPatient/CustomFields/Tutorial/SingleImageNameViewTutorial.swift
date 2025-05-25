@@ -19,8 +19,8 @@ struct SingleImageNameViewTutorial: View {
     ]
     @State var imgWidthBig = 160.0
     @State var imgHeightBig = 70.0
-    @State var imgWidthSmall = 140.0
-    @State var imgHeightSmall = 50.0
+    @State var imgWidthSmall = 150.0
+    @State var imgHeightSmall = 60.0
     
     var selectCurrentNameParentFunc: (SingleImageName) -> Void
     @State var isPulsing = false
@@ -28,25 +28,13 @@ struct SingleImageNameViewTutorial: View {
         ZStack{
             RoundedRectangle(cornerRadius: 18)
                 .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: currentSingleName.isSelected ? selectedColorGradient : notSelectedColorGradient),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ),
+                    Color(red: 35/255, green: 75/255, blue: 98/255)
                     
                 )
                 .frame(width: imgWidthBig, height: imgHeightBig)
             RoundedRectangle(cornerRadius: 15)
                 .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            Color(red: 255/255, green: 219/255, blue: 50/255), // light orange
-                            Color(red: 255/255, green: 140/255, blue: 0/255) //dark orange
-                            
-                        ]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ),
+                    Color(red: 251/255, green: 247/255, blue: 233/255)
                 )
                 .frame(width: imgWidthSmall, height: imgHeightSmall)
             CustomText(text: currentSingleName.emotionName.capitalizingFirstLetter())
