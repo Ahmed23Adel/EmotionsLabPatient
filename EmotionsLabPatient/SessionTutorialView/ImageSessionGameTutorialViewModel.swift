@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class ImageSessionGameTutorialViewModel: ObservableObject{
     private let gameData = GameData()
@@ -16,7 +17,7 @@ class ImageSessionGameTutorialViewModel: ObservableObject{
     var selectedName: SingleImageName?
     @Published var currentTutorialStep: tutorialStep
     var onSessionFinished: () -> Void = {}
-    
+    @AppStorage("chosenBakcground") var chosenBakcground: String = "brightBackground1"
     enum tutorialStep{
         case initial
         case imageSelection

@@ -50,6 +50,7 @@ struct ImagesSessionGameView: View {
                     .padding(.trailing, 10)
                 }
                 
+                
                 // Content immediately after header (no Spacer here)
                 if viewModel.isUploadingResults {
                     ProgressView("Please wait...")
@@ -67,11 +68,32 @@ struct ImagesSessionGameView: View {
                     .disabled(isPaused) // Disable interaction when paused
                 }
             }
+            if viewModel.showFeedbackMessage {
+                VStack {
+                    Spacer()
+                    HeaderText(text: viewModel.feedbackMessage)
+                        .padding()
+                        .background(Color.white.opacity(0.9))
+                        .cornerRadius(12)
+                        .shadow(radius: 5)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .bottom).combined(with: .opacity),
+                            removal: .offset(y: -50).combined(with: .opacity)))
+                        .padding(.bottom, 120)
+                }
+                .animation(.easeInOut(duration: 0.4), value: viewModel.showFeedbackMessage)
+                .onTapGesture {
+                    viewModel.showFeedbackMessage = false
+                }
+            }
+
             
             // MARK:  Pause overlay
             if isPaused {
                 pauseOverlay
             }
+            
+            
         }
         .navigationBarBackButtonHidden(true)
         .interactiveDismissDisabled()

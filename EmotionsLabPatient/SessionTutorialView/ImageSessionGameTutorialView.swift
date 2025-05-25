@@ -15,12 +15,19 @@ struct ImageSessionGameTutorialView: View {
     
     var body: some View {
         ZStack {
-            Color(red: 25/255, green: 166/255, blue: 220/255)
-                .ignoresSafeArea()
+            if viewModel.chosenBakcground != "noBackground" {
+                Image(viewModel.chosenBakcground)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+            }
+            
             VStack {
                 MultipleImagesViewTutorial(emotionsImages: $viewModel.emotionsImages, selectCurrentImageParentFunc: viewModel.imageSelect)
                 MultiplieImageNamesViewTutorial(emotionNames: $viewModel.emotionNames, selectCurrentNameParentFunc: viewModel.nameSelect)
             }
+            .padding(.top, 50)
             if viewModel.currentTutorialStep == .initial{
                 tutorialOverlayIntial
             } else if viewModel.currentTutorialStep == .completed{

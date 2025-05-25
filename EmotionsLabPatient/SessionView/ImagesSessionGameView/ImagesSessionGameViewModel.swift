@@ -34,8 +34,22 @@ class ImagesSessionGameViewModel: ObservableObject{
     var onSessionFinished: () -> Void = {}
     private var audioPlayer: AVAudioPlayer?
     
-    @AppStorage("chosenBakcground") var chosenBakcground: String = "brightBackground1"
 
+    @Published var showFeedbackMessage = false
+    @Published var feedbackMessage = ""
+    let encouragementMessages = [
+        "Hmm, try again!",
+        "Let’s take another look!",
+        "Almost there!",
+        "Keep going, you got this!",
+        "Nice try, let’s try again!",
+        "Great effort!",
+        "Don't give up!",
+        "One more try!"
+    ]
+
+    @AppStorage("chosenBakcground") var chosenBakcground: String = "brightBackground1"
+    
     init(){
         emotionsImages = gameData.emotionsImages
         emotionNames = gameData.emotionNames
@@ -129,8 +143,21 @@ class ImagesSessionGameViewModel: ObservableObject{
     func showSelectError(selectedName: SingleImageName, selectedImage: SingleImage){
         vibrateViews(selectedName: selectedName, selectedImage: selectedImage)
         resetSelection(selectedName: selectedName, selectedImage: selectedImage)
+        showRandomFeedbackMessage()
     }
     
+    func showRandomFeedbackMessage() {
+        feedbackMessage = encouragementMessages.randomElement() ?? "Try again!"
+        withAnimation(.easeInOut(duration: 0.7)) {
+            showFeedbackMessage = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            withAnimation(.easeInOut(duration: 0.7)) {
+                self.showFeedbackMessage = false
+            }
+        }
+    }
+
     func vibrateViews(selectedName: SingleImageName, selectedImage: SingleImage){
         selectedName.isShowError = true
         selectedImage.isShowError = true
