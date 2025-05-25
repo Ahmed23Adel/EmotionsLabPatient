@@ -2,6 +2,7 @@
 
 EmotionsLabPatient is an innovative iPad application designed to help individuals with autism learn to recognize and understand emotions. This educational tool uses a combination of visual cues, interactive exercises, and gamification to create an engaging learning experience that addresses the specific challenges many people with autism face in emotional recognition.
 
+There is another app for the therapist to track the progress: https://github.com/Ahmed23Adel/EmotionsLabTherapist/edit/signup-login-refreshtoken/README.md
 ## 📱 Demo Video
 
 
