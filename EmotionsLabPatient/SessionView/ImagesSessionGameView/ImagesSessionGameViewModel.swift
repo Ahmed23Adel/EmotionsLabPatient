@@ -111,6 +111,8 @@ class ImagesSessionGameViewModel: ObservableObject{
     }
     
     func resetSelectionOnCorrectMatch(selectedName: SingleImageName, selectedImage: SingleImage){
+        selectedName.isSelected = false
+        selectedImage.isSelected = false
         hideImgAndName(selectedName: selectedName, selectedImage: selectedImage)
         gameData.enableSelectionForAllNames()
         gameData.enableSelectionForAllImages()
@@ -252,7 +254,6 @@ class ImagesSessionGameViewModel: ObservableObject{
     func uploadExitReason(exitReason: String) async {
         let apiCaller = ApiCaller()
         do {
-            print("currentSession.sessionId.uuidString,", currentSession.sessionId.uuidString, exitReason )
             _ = try await apiCaller.callApiWithToken(
                 endpoint: "add-session-exit-reason",
                 method: .post,

@@ -66,6 +66,7 @@ struct SingleImageView: View {
     }
     
     private func SelectOrUnselectView(){
+        print("SelectOrUnselectView", currentImage.isSelected)
         if currentImage.isSelected{
             withAnimation(.easeIn(duration: 0.1)){
                 imgWidthAndHeight += 10
