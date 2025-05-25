@@ -20,9 +20,7 @@ struct MainButton: View {
                     .resizable()
                     .frame(width: 130, height: 130)
                     .padding(30)
-                Text(text)
-                    .foregroundColor(Color(red: 35/255, green: 75/255, blue: 98/255))
-                    .font(.headline)
+                HeaderText(text: text)
             }
             .background(.ultraThinMaterial)
             .cornerRadius(25)

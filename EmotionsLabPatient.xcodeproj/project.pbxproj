@@ -33,9 +33,22 @@
 		E2A1F0062DA7E04F00F3543F /* EmotionsLabPatientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EmotionsLabPatientUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E2A411D92DE2E08200346752 /* Exceptions for "EmotionsLabPatient" folder in "EmotionsLabPatient" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = E2A1EFEE2DA7E04D00F3543F /* EmotionsLabPatient */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E2A1EFF12DA7E04D00F3543F /* EmotionsLabPatient */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E2A411D92DE2E08200346752 /* Exceptions for "EmotionsLabPatient" folder in "EmotionsLabPatient" target */,
+			);
 			path = EmotionsLabPatient;
 			sourceTree = "<group>";
 		};
@@ -409,6 +422,9 @@
 				DEVELOPMENT_TEAM = Z6S698QJX2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EmotionsLabPatient/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -437,6 +453,9 @@
 				DEVELOPMENT_TEAM = Z6S698QJX2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EmotionsLabPatient/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

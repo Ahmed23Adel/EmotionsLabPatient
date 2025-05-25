@@ -11,7 +11,7 @@ import Foundation
 class ApiCaller{
     
     
-    private var baseUrl: String = "http://127.0.0.1:8000/"
+    private var baseUrl: String = "http://192.168.1.5:8000/"
     
     func callApiNoToken(endpoint: String, method: Method, body: [String: String]? = nil, params: [String: String]? = nil) async throws ->  Data{
         do{
